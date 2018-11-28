@@ -8,6 +8,7 @@ const jumper = () => {
 
   let start           // where scroll starts                    (px)
   let stop            // where scroll stops                     (px)
+  let scrolling       // scrolling frame                        (number)
 
   let offset          // adjustment from the stop position      (px)
   let easing          // easing function                        (function)
@@ -53,7 +54,7 @@ const jumper = () => {
     window.scrollTo(0, next)
 
     // check progress
-    timeElapsed < duration
+    scrolling = timeElapsed < duration
       ? window.requestAnimationFrame(loop)       // continue scroll loop
       : done()                                   // scrolling is done
   }
@@ -85,6 +86,8 @@ const jumper = () => {
   // API
 
   function jump (target, options = {}) {
+    window.cancelAnimationFrame(scrolling)
+
     // resolve options, or use defaults
     duration = options.duration || 1000
     offset = options.offset || 0
@@ -136,7 +139,7 @@ const jumper = () => {
     }
 
     // start the loop
-    window.requestAnimationFrame(loop)
+    scrolling = window.requestAnimationFrame(loop)
   }
 
   // expose only the jump method
